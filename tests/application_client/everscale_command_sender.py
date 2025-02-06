@@ -50,7 +50,7 @@ class Errors(IntEnum):
     SW_INVALID_WALLET_TYPE = 0x6B15,
     SW_INVALID_TICKER_LENGTH = 0x6B16
     
-    # Status Word from boilerplate app
+    # Status Word from everscale app
     # SW_DENY                    = 0x6985
     # SW_WRONG_P1P2              = 0x6A86
     # SW_WRONG_DATA_LENGTH       = 0x6A87
@@ -71,7 +71,7 @@ def split_message(message: bytes, max_size: int) -> List[bytes]:
     return [message[x:x + max_size] for x in range(0, len(message), max_size)]
 
 
-class BoilerplateCommandSender:
+class EverscaleCommandSender:
     def __init__(self, backend: BackendInterface) -> None:
         self.backend = backend
 

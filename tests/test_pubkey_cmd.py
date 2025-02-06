@@ -5,8 +5,8 @@ from ragger.error import ExceptionRAPDU
 from ragger.backend.interface import BackendInterface
 from ragger.navigator.navigation_scenario import NavigateWithScenario
 
-from application_client.boilerplate_command_sender import BoilerplateCommandSender, Errors
-from application_client.boilerplate_response_unpacker import unpack_get_public_key_response
+from application_client.everscale_command_sender import EverscaleCommandSender, Errors
+from application_client.everscale_response_unpacker import unpack_get_public_key_response
 
 
 # In this test we check that the GET_PUBLIC_KEY works in non-confirmation mode
@@ -19,7 +19,7 @@ def test_get_public_key_no_confirm(backend: BackendInterface) -> None:
         "m/44'/1'/2147483647/0/0/0/0/0/0/0"
     ]
     for path in path_list:
-        client = BoilerplateCommandSender(backend)
+        client = EverscaleCommandSender(backend)
         response = client.get_public_key(path=path).data
         _, public_key, _, chain_code = unpack_get_public_key_response(response)
 
@@ -30,7 +30,7 @@ def test_get_public_key_no_confirm(backend: BackendInterface) -> None:
 
 # In this test we check that the GET_PUBLIC_KEY works in confirmation mode
 def test_get_public_key_confirm_accepted(backend: BackendInterface, scenario_navigator: NavigateWithScenario) -> None:
-    client = BoilerplateCommandSender(backend)
+    client = EverscaleCommandSender(backend)
     path = "m/44'/1'/0'/0/0"
     with client.get_public_key_with_confirmation(path=path):
         scenario_navigator.address_review_approve()
@@ -45,7 +45,7 @@ def test_get_public_key_confirm_accepted(backend: BackendInterface, scenario_nav
 
 # In this test we check that the GET_PUBLIC_KEY in confirmation mode replies an error if the user refuses
 def test_get_public_key_confirm_refused(backend: BackendInterface, scenario_navigator: NavigateWithScenario) -> None:
-    client = BoilerplateCommandSender(backend)
+    client = EverscaleCommandSender(backend)
     path = "m/44'/1'/0'/0/0"
 
     with pytest.raises(ExceptionRAPDU) as e:
