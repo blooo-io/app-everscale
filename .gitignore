@@ -15,3 +15,5 @@ dist
 *.spec
 *.DS_Store
 client/target
+
+__pycache__
