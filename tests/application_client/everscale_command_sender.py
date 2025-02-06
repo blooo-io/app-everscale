@@ -48,10 +48,9 @@ class Errors(IntEnum):
     SW_INVALID_SRC_ADDRESS = 0x6B13,
     SW_INVALID_WALLET_ID = 0x6B14,
     SW_INVALID_WALLET_TYPE = 0x6B15,
-    SW_INVALID_TICKER_LENGTH = 0x6B16
-    
+    SW_INVALID_TICKER_LENGTH = 0x6B16,
+    SW_DENY = 0x6985,
     # Status Word from everscale app
-    # SW_DENY                    = 0x6985
     # SW_WRONG_P1P2              = 0x6A86
     # SW_WRONG_DATA_LENGTH       = 0x6A87
     # SW_INS_NOT_SUPPORTED       = 0x6D00
@@ -100,21 +99,21 @@ class EverscaleCommandSender:
                                      data=b"")
 
 
-    def get_public_key(self, path: str) -> RAPDU:
+    def get_public_key(self, account_number: int) -> RAPDU:
         return self.backend.exchange(cla=CLA,
                                      ins=InsType.GET_PUBLIC_KEY,
                                      p1=P1.P1_START,
                                      p2=P2.P2_LAST,
-                                     data=pack_derivation_path(path))
+                                     data=account_number.to_bytes(4, "big"))
 
 
     @contextmanager
-    def get_public_key_with_confirmation(self, path: str) -> Generator[None, None, None]:
+    def get_public_key_with_confirmation(self, account_number: int) -> Generator[None, None, None]:
         with self.backend.exchange_async(cla=CLA,
                                          ins=InsType.GET_PUBLIC_KEY,
                                          p1=P1.P1_CONFIRM,
                                          p2=P2.P2_LAST,
-                                         data=pack_derivation_path(path)) as response:
+                                         data=account_number.to_bytes(4, "big")) as response:
             yield response
 
 

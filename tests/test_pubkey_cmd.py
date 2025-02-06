@@ -8,48 +8,52 @@ from ragger.navigator.navigation_scenario import NavigateWithScenario
 from application_client.everscale_command_sender import EverscaleCommandSender, Errors
 from application_client.everscale_response_unpacker import unpack_get_public_key_response
 
+HARDENED_OFFSET = 0x80000000
+PATH_PREFIX = "44'/396'/"
+PATH_SUFFIX = "'/0'/0'"
 
 # In this test we check that the GET_PUBLIC_KEY works in non-confirmation mode
+@pytest.mark.active_test_scope
 def test_get_public_key_no_confirm(backend: BackendInterface) -> None:
-    path_list = [
-        "m/44'/1'/0'/0/0",
-        "m/44'/1'/0/0/0",
-        "m/44'/1'/911'/0/0",
-        "m/44'/1'/255/255/255",
-        "m/44'/1'/2147483647/0/0/0/0/0/0/0"
+    account_number_list = [
+        0,
+        1,
+        911,
+        255,
+        2147483647
     ]
-    for path in path_list:
+    for account_number in account_number_list:
         client = EverscaleCommandSender(backend)
-        response = client.get_public_key(path=path).data
-        _, public_key, _, chain_code = unpack_get_public_key_response(response)
+        response = client.get_public_key(account_number=account_number).data
+        _, public_key = unpack_get_public_key_response(response)
 
-        ref_public_key, ref_chain_code = calculate_public_key_and_chaincode(CurveChoice.Secp256k1, path=path)
-        assert public_key.hex() == ref_public_key
-        assert chain_code.hex() == ref_chain_code
+        ref_public_key, _ = calculate_public_key_and_chaincode(CurveChoice.Ed25519Slip, path=PATH_PREFIX + str(account_number | HARDENED_OFFSET) + PATH_SUFFIX)        
+        assert "00" + public_key.hex() == ref_public_key
 
 
 # In this test we check that the GET_PUBLIC_KEY works in confirmation mode
+@pytest.mark.active_test_scope
 def test_get_public_key_confirm_accepted(backend: BackendInterface, scenario_navigator: NavigateWithScenario) -> None:
     client = EverscaleCommandSender(backend)
-    path = "m/44'/1'/0'/0/0"
-    with client.get_public_key_with_confirmation(path=path):
+    account_number = 0
+    with client.get_public_key_with_confirmation(account_number=account_number):
         scenario_navigator.address_review_approve()
 
     response = client.get_async_response().data
-    _, public_key, _, chain_code = unpack_get_public_key_response(response)
+    _, public_key  = unpack_get_public_key_response(response)
 
-    ref_public_key, ref_chain_code = calculate_public_key_and_chaincode(CurveChoice.Secp256k1, path=path)
-    assert public_key.hex() == ref_public_key
-    assert chain_code.hex() == ref_chain_code
+    ref_public_key, _ = calculate_public_key_and_chaincode(CurveChoice.Ed25519Slip, path=PATH_PREFIX + str(account_number | HARDENED_OFFSET) + PATH_SUFFIX)
+    assert "00" + public_key.hex() == ref_public_key
 
 
 # In this test we check that the GET_PUBLIC_KEY in confirmation mode replies an error if the user refuses
+@pytest.mark.active_test_scope
 def test_get_public_key_confirm_refused(backend: BackendInterface, scenario_navigator: NavigateWithScenario) -> None:
     client = EverscaleCommandSender(backend)
-    path = "m/44'/1'/0'/0/0"
+    account_number = 0
 
     with pytest.raises(ExceptionRAPDU) as e:
-        with client.get_public_key_with_confirmation(path=path):
+        with client.get_public_key_with_confirmation(account_number=account_number):
             scenario_navigator.address_review_reject()
 
     # Assert that we have received a refusal
