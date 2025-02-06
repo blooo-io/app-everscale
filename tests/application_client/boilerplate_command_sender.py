@@ -25,26 +25,46 @@ class P2(IntEnum):
     P2_MORE = 0x80
 
 class InsType(IntEnum):
-    GET_VERSION    = 0x03
-    GET_APP_NAME   = 0x04
-    GET_PUBLIC_KEY = 0x05
-    SIGN_TX        = 0x06
+    GET_APP_CONFIGURATION = 0x01
+    GET_PUBLIC_KEY = 0x02
+    SIGN_MESSAGE = 0x03
+    GET_ADDRESS = 0X04
+    SIGN_TRANSACTION = 0x05
 
 class Errors(IntEnum):
-    SW_DENY                    = 0x6985
-    SW_WRONG_P1P2              = 0x6A86
-    SW_WRONG_DATA_LENGTH       = 0x6A87
-    SW_INS_NOT_SUPPORTED       = 0x6D00
-    SW_CLA_NOT_SUPPORTED       = 0x6E00
-    SW_WRONG_RESPONSE_LENGTH   = 0xB000
-    SW_DISPLAY_BIP32_PATH_FAIL = 0xB001
-    SW_DISPLAY_ADDRESS_FAIL    = 0xB002
-    SW_DISPLAY_AMOUNT_FAIL     = 0xB003
-    SW_WRONG_TX_LENGTH         = 0xB004
-    SW_TX_PARSING_FAIL         = 0xB005
-    SW_TX_HASH_FAIL            = 0xB006
-    SW_BAD_STATE               = 0xB007
-    SW_SIGNATURE_FAIL          = 0xB008
+    SW_INVALID_DATA = 0x6B00,
+    SW_CELL_UNDERFLOW = 0x6B01,
+    SW_RANGE_CHECK_FAIL = 0x6B02,
+    SW_WRONG_LABEL = 0x6B03,
+    SW_INVALID_FLAG = 0x6B04,
+    SW_END_OF_STREAM = 0x6B05,
+    SW_SLICE_IS_EMPTY = 0x6B06,
+    SW_INVALID_KEY = 0x6B07,
+    SW_CELL_IS_EMPTY = 0x6B08,
+    SW_INVALID_HASH = 0x6B09,
+    SW_INVALID_CELL_INDEX = 0x6B10,
+    SW_INVALID_REQUEST = 0x6B11,
+    SW_INVALID_FUNCTION_ID = 0x6B12,
+    SW_INVALID_SRC_ADDRESS = 0x6B13,
+    SW_INVALID_WALLET_ID = 0x6B14,
+    SW_INVALID_WALLET_TYPE = 0x6B15,
+    SW_INVALID_TICKER_LENGTH = 0x6B16
+    
+    # Status Word from boilerplate app
+    # SW_DENY                    = 0x6985
+    # SW_WRONG_P1P2              = 0x6A86
+    # SW_WRONG_DATA_LENGTH       = 0x6A87
+    # SW_INS_NOT_SUPPORTED       = 0x6D00
+    # SW_CLA_NOT_SUPPORTED       = 0x6E00
+    # SW_WRONG_RESPONSE_LENGTH   = 0xB000
+    # SW_DISPLAY_BIP32_PATH_FAIL = 0xB001
+    # SW_DISPLAY_ADDRESS_FAIL    = 0xB002
+    # SW_DISPLAY_AMOUNT_FAIL     = 0xB003
+    # SW_WRONG_TX_LENGTH         = 0xB004
+    # SW_TX_PARSING_FAIL         = 0xB005
+    # SW_TX_HASH_FAIL            = 0xB006
+    # SW_BAD_STATE               = 0xB007
+    # SW_SIGNATURE_FAIL          = 0xB008
 
 
 def split_message(message: bytes, max_size: int) -> List[bytes]:
