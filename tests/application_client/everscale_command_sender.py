@@ -84,9 +84,9 @@ class EverscaleCommandSender:
                                      data=b"")
 
 
-    def get_version(self) -> RAPDU:
+    def get_app_config(self) -> RAPDU:
         return self.backend.exchange(cla=CLA,
-                                     ins=InsType.GET_VERSION,
+                                     ins=InsType.GET_APP_CONFIGURATION,
                                      p1=P1.P1_START,
                                      p2=P2.P2_LAST,
                                      data=b"")
