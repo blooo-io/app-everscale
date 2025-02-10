@@ -10,9 +10,10 @@ void get_public_key(uint32_t account_number, uint8_t* publicKeyArray) {
     cx_ecfp_public_key_t publicKey;
 
     get_private_key(account_number, &privateKey);
+    cx_err_t err;
     BEGIN_TRY {
         TRY {
-            cx_ecfp_generate_pair(CX_CURVE_Ed25519, &publicKey, &privateKey, 1);
+            err = cx_ecfp_generate_pair_no_throw(CX_CURVE_Ed25519, &publicKey, &privateKey, 1);
         }
         CATCH_OTHER(e) {
             THROW(e);
@@ -45,7 +46,7 @@ void get_private_key(uint32_t account_number, cx_ecfp_private_key_t *privateKey)
     uint8_t privateKeyData[32];
     BEGIN_TRY {
         TRY {
-            os_perso_derive_node_bip32_seed_key(HDW_ED25519_SLIP10,
+            os_derive_bip32_with_seed_no_throw(HDW_ED25519_SLIP10,
                                                 CX_CURVE_Ed25519,
                                                 derivePath,
                                                 BIP32_PATH,
@@ -53,7 +54,7 @@ void get_private_key(uint32_t account_number, cx_ecfp_private_key_t *privateKey)
                                                 NULL,
                                                 NULL,
                                                 0);
-            cx_ecfp_init_private_key(CX_CURVE_Ed25519,
+            cx_ecfp_init_private_key_no_throw(CX_CURVE_Ed25519,
                                      privateKeyData,
                                      32,
                                      privateKey);
@@ -237,9 +238,9 @@ uint8_t set_result_sign_transaction() {
         TRY {
             get_private_key(context->account_number, &privateKey);
             if (!context->sign_with_chain_id) {
-                cx_eddsa_sign(&privateKey, CX_LAST, CX_SHA512, context->to_sign, TO_SIGN_LENGTH, NULL, 0, context->signature, SIGNATURE_LENGTH, NULL);
+                cx_eddsa_sign_no_throw(&privateKey, CX_SHA512, context->to_sign, TO_SIGN_LENGTH, context->signature, SIGNATURE_LENGTH);
             } else {
-                cx_eddsa_sign(&privateKey, CX_LAST, CX_SHA512, context->to_sign, CHAIN_ID_LENGTH + TO_SIGN_LENGTH, NULL, 0, context->signature, SIGNATURE_LENGTH, NULL);
+                cx_eddsa_sign_no_throw(&privateKey, CX_SHA512, context->to_sign, CHAIN_ID_LENGTH + TO_SIGN_LENGTH, context->signature, SIGNATURE_LENGTH);
             }
         } FINALLY {
             memset(&privateKey, 0, sizeof(privateKey));
@@ -262,9 +263,10 @@ uint8_t set_result_sign() {
         TRY {
             get_private_key(context->account_number, &privateKey);
             if (!context->sign_with_chain_id) {
-                cx_eddsa_sign(&privateKey, CX_LAST, CX_SHA512, context->to_sign, TO_SIGN_LENGTH, NULL, 0, context->signature, SIGNATURE_LENGTH, NULL);
+                cx_eddsa_sign_no_throw(&privateKey, CX_SHA512, context->to_sign, TO_SIGN_LENGTH, context->signature, SIGNATURE_LENGTH);
             } else {
-                cx_eddsa_sign(&privateKey, CX_LAST, CX_SHA512, context->to_sign, CHAIN_ID_LENGTH + TO_SIGN_LENGTH, NULL, 0, context->signature, SIGNATURE_LENGTH, NULL);
+
+                cx_eddsa_sign_no_throw(&privateKey, CX_SHA512, context->to_sign, CHAIN_ID_LENGTH + TO_SIGN_LENGTH, context->signature, SIGNATURE_LENGTH);
             }
         } FINALLY {
             memset(&privateKey, 0, sizeof(privateKey));
