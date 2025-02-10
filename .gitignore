@@ -1,17 +1,34 @@
+# Build and compilation directories (Répertoires de compilation)
 bin
 debug
 dep
 obj
 dev-env
+
+# Generated source files
 src/glyphs.c
 src/glyphs.h
+
+# IDE/editor specific files
 .idea
 .vscode
 gitignore
+
+# Dependency directories
 node_modules
+
+# Log files and test specifications
 *.log*
+*.spec
+
+# Build output and distribution directories
 build
 dist
-*.spec
-*.DS_Store
 client/target
+
+# Operating system files
+*.DS_Store
+
+# Python cache and temporary files
+__pycache__
+snapshots-tmp
