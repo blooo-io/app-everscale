@@ -145,28 +145,21 @@ class EverscaleCommandSender:
 
 
     @contextmanager
-    def sign_tx(self, path: str, transaction: bytes) -> Generator[None, None, None]:
-        self.backend.exchange(cla=CLA,
-                              ins=InsType.SIGN_TX,
-                              p1=P1.P1_START,
-                              p2=P2.P2_MORE,
-                              data=pack_derivation_path(path))
-        messages = split_message(transaction, MAX_APDU_LEN)
-        idx: int = P1.P1_START + 1
+    def sign_message(self, account_number: int, wallet_type: WalletType, message: bytes) -> Generator[None, None, None]:
+        with self.backend.exchange_async(cla=CLA,
+                                         ins=InsType.SIGN_MESSAGE,
+                                         p1=P1.P1_CONFIRM,
+                                         p2=P2.P2_LAST,
+                                         data=account_number.to_bytes(4, "big") + wallet_type.to_bytes(1, "big") + message) as response:
+            yield response
 
-        for msg in messages[:-1]:
-            self.backend.exchange(cla=CLA,
-                                  ins=InsType.SIGN_TX,
-                                  p1=idx,
-                                  p2=P2.P2_MORE,
-                                  data=msg)
-            idx += 1
-
+    @contextmanager
+    def sign_tx(self, account_number: int, wallet_type: WalletType, transaction: bytes) -> Generator[None, None, None]:
         with self.backend.exchange_async(cla=CLA,
                                          ins=InsType.SIGN_TX,
-                                         p1=idx,
+                                         p1=P1.P1_START,
                                          p2=P2.P2_LAST,
-                                         data=messages[-1]) as response:
+                                         data=account_number.to_bytes(4, "big") + wallet_type.to_bytes(1, "big") + transaction) as response:
             yield response
 
     def get_async_response(self) -> Optional[RAPDU]:

@@ -45,7 +45,7 @@ def unpack_get_app_and_version_response(response: bytes) -> Tuple[str, str]:
 # Unpack from response:
 # response = pub_key_len (1)
 #            pub_key (var)
-def unpack_get_public_key_response(response: bytes) -> Tuple[int, bytes, int, bytes]:
+def unpack_get_public_key_response(response: bytes) -> Tuple[int, bytes]:
     response, pub_key_len, pub_key = pop_size_prefixed_buf_from_buf(response)
 
     assert pub_key_len == 32
@@ -68,6 +68,7 @@ def unpack_get_address_response(response: bytes) -> Tuple[int, bytes]:
 # response = der_sig_len (1)
 #            der_sig (var)
 #            v (1)
+# TODO: check if this needs to be edited
 def unpack_sign_tx_response(response: bytes) -> Tuple[int, bytes, int]:
     response, der_sig_len, der_sig = pop_size_prefixed_buf_from_buf(response)
     response, v = pop_sized_buf_from_buffer(response, 1)
