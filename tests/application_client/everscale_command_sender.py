@@ -31,6 +31,17 @@ class InsType(IntEnum):
     GET_ADDRESS = 0X04
     SIGN_TRANSACTION = 0x05
 
+class WalletType(IntEnum):
+    WALLET_V3 = 0
+    EVER_WALLET = 1
+    SAFE_MULTISIG_WALLET = 2
+    SAFE_MULTISIG_WALLET_24H = 3
+    SETCODE_MULTISIG_WALLET = 4
+    BRIDGE_MULTISIG_WALLET = 5
+    SURF_WALLET = 6
+    MULTISIG_2 = 7
+    MULTISIG_2_1 = 8
+
 class Errors(IntEnum):
     SW_INVALID_DATA = 0x6B00,
     SW_CELL_UNDERFLOW = 0x6B01,
@@ -114,6 +125,22 @@ class EverscaleCommandSender:
                                          p1=P1.P1_CONFIRM,
                                          p2=P2.P2_LAST,
                                          data=account_number.to_bytes(4, "big")) as response:
+            yield response
+
+    def get_address(self, account_number: int, wallet_type: WalletType) -> RAPDU:
+        return self.backend.exchange(cla=CLA,
+                                    ins=InsType.GET_ADDRESS,
+                                    p1=P1.P1_START,
+                                    p2=P2.P2_LAST,
+                                    data=account_number.to_bytes(4, "big") + wallet_type.to_bytes(1, "big"))
+
+    @contextmanager
+    def get_address_with_confirmation(self, account_number: int, wallet_type: WalletType) -> Generator[None, None, None]:
+        with self.backend.exchange_async(cla=CLA,
+                                         ins=InsType.GET_ADDRESS,
+                                         p1=P1.P1_CONFIRM,
+                                         p2=P2.P2_LAST,
+                                         data=account_number.to_bytes(4, "big") + wallet_type.to_bytes(1, "big")) as response:
             yield response
 
 
