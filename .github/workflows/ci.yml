@@ -24,13 +24,13 @@ jobs:
         - path: $NANOSP_SDK
           name: nanosp
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build application for SDK ${{ matrix.sdk.name }}
         run: |
           make clean
           make BOLOS_SDK=${{ matrix.sdk.path }}
       - name: Upload app binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: app
           path: bin
@@ -41,12 +41,12 @@ jobs:
     container:
       image: ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder:latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build with Clang Static Analyzer
         run: |
           make clean
           scan-build --use-cc=clang -analyze-headers -enable-checker security -enable-checker unix -enable-checker valist -o scan-build --status-bugs make default
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: scan-build
