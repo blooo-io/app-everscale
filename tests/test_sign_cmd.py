@@ -17,7 +17,6 @@ from utils import navigate_until_text_and_compare
 # The transaction is short and will be sent in one chunk
 # We will ensure that the displayed information is correct by using screenshots comparison
 
-# TODO: Add a valid raw transaction and a valid expected signature
 @pytest.mark.active_test_scope
 def test_sign_tx_transfer(backend: BackendInterface, navigator: Navigator, default_screenshot_path: str, test_name: str) -> None:
     # Use the app interface instead of raw interface
@@ -45,6 +44,7 @@ def test_sign_tx_transfer(backend: BackendInterface, navigator: Navigator, defau
     _, der_sig, _ = unpack_sign_tx_response(response)
     assert der_sig.hex() == "a0396cd952160f068e0a7d6279ba2b61a2215a4dd997fcc1fe8905722341a20a86424dfdb2598b86855e73e47a1804023ff3f9afffd91825df0f58825dabd808"
 
+# TODO: Add tests for the other transaction types
 
 # # In this test we send to the device a transaction to trig a blind-signing flow
 # # The transaction is short and will be sent in one chunk
