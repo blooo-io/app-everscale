@@ -3,8 +3,6 @@ from typing import Generator, List, Optional
 from contextlib import contextmanager
 
 from ragger.backend.interface import BackendInterface, RAPDU
-from ragger.bip import pack_derivation_path
-
 
 MAX_APDU_LEN: int = 255
 
@@ -106,11 +104,6 @@ class EverscaleCommandSender:
             p1=P1.P1_START,
             p2=P2.P2_LAST,
             data=b"",
-        )
-
-    def get_app_name(self) -> RAPDU:
-        return self.backend.exchange(
-            cla=CLA, ins=InsType.GET_APP_NAME, p1=P1.P1_START, p2=P2.P2_LAST, data=b""
         )
 
     def get_public_key(self, account_number: int) -> RAPDU:
