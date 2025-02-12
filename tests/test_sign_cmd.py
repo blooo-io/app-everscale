@@ -6,10 +6,9 @@ from ragger.firmware import Firmware
 from ragger.navigator import Navigator, NavInsID
 from ragger.navigator.navigation_scenario import NavigateWithScenario
 
-from application_client.everscale_transaction import Transaction
-from application_client.everscale_command_sender import EverscaleCommandSender, Errors, WalletType
-from application_client.everscale_response_unpacker import unpack_get_public_key_response, unpack_sign_tx_response
-from utils import check_signature_validity
+from application_client.everscale_command_sender import EverscaleCommandSender
+from application_client.everscale_response_unpacker import unpack_sign_tx_response
+from utils import navigate_until_text_and_compare
 
 # In this tests we check the behavior of the device when asked to sign a transaction
 
@@ -19,29 +18,32 @@ from utils import check_signature_validity
 # We will ensure that the displayed information is correct by using screenshots comparison
 
 # TODO: Add a valid raw transaction and a valid expected signature
-def test_sign_tx_short_tx(backend: BackendInterface, scenario_navigator: NavigateWithScenario) -> None:
+@pytest.mark.active_test_scope
+def test_sign_tx_transfer(backend: BackendInterface, navigator: Navigator, default_screenshot_path: str, test_name: str) -> None:
     # Use the app interface instead of raw interface
     client = EverscaleCommandSender(backend)
-    account_number = 0
-    wallet_type = WalletType.WALLET_V3
-    # First we need to get the public key of the device in order to build the transaction
-    rapdu = client.get_public_key(account_number=account_number)
-    _, public_key, _, _ = unpack_get_public_key_response(rapdu.data)
 
     # Raw transaction
-    transaction = bytes.fromhex("0000000000000000000000000000000000000000000000000000000000000000")
+    transaction = bytes.fromhex("00000000010904455645520001010301006c000161b3badb535d1b88d0e4d60d316567b1448568efafdf21846ecd0ba02e3adabf97000000ca7cfb9642b3d6449ea677323640010165801be2256b3d704f24c46aea3298c1a5ea8f8d1aa86ccc89474bc0570265e7898ac0000000000000000036d36956f8b969d038020000")
+
 
     # Send the sign device instruction.
     # As it requires on-screen validation, the function is asynchronous.
     # It will yield the result when the navigation is done
-    with client.sign_tx(account_number=account_number, wallet_type=wallet_type, transaction=transaction):
+    with client.sign_tx(transaction):
         # Validate the on-screen request by performing the navigation appropriate for this device
-        scenario_navigator.review_approve()
+        navigate_until_text_and_compare(
+            backend.firmware,
+            navigator,
+            "Accept",
+            default_screenshot_path,
+            test_name
+        )
 
     # The device as yielded the result, parse it and ensure that the signature is correct
     response = client.get_async_response().data
     _, der_sig, _ = unpack_sign_tx_response(response)
-    assert der_sig.hex() == "0000000000000000000000000000000000000000000000000000000000000000"
+    assert der_sig.hex() == "a0396cd952160f068e0a7d6279ba2b61a2215a4dd997fcc1fe8905722341a20a86424dfdb2598b86855e73e47a1804023ff3f9afffd91825df0f58825dabd808"
 
 
 # # In this test we send to the device a transaction to trig a blind-signing flow

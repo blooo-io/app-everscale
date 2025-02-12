@@ -6,7 +6,7 @@ from Crypto.Hash import keccak
 from ecdsa.curves import SECP256k1
 from ecdsa.keys import VerifyingKey
 from ecdsa.util import sigdecode_der
-
+from ragger.navigator import NavInsID
 
 # Check if a signature of a given message is valid
 def check_signature_validity(public_key: bytes, signature: bytes, message: bytes) -> bool:
@@ -74,3 +74,56 @@ def _read_makefile() -> List[str]:
     with open(makefile, "r", encoding="utf-8") as f_p:
         lines = f_p.readlines()
     return lines
+
+
+def navigate_until_text_and_compare(
+    firmware,
+    navigator,
+    text: str,
+    screenshot_path: str,
+    test_name: str,
+    screen_change_before_first_instruction: bool = True,
+    screen_change_after_last_instruction: bool = True,
+    nav_ins_confirm_instruction: NavInsID = NavInsID.USE_CASE_REVIEW_CONFIRM,
+):
+    """Navigate through device screens until specified text is found and compare screenshots.
+
+    This function handles navigation through device screens differently based on the device type (Stax/Flex vs others).
+    It will navigate through screens until the specified text is found, taking screenshots for comparison along the way.
+
+    Args:
+        firmware: The firmware object containing device information
+        navigator: The navigator object used to control device navigation
+        text: The text string to search for on device screens
+        screenshot_path: Path where screenshot comparison files will be saved
+        test_name: The name of the test that is being run
+        screen_change_before_first_instruction: Whether to wait for screen change before first instruction
+        screen_change_after_last_instruction: Whether to wait for screen change after last instruction
+    Returns:
+        None
+
+    Note:
+        For Stax/Flex devices:
+        - Uses swipe left gesture for navigation
+        - Uses review confirm for confirmation
+        For other devices:
+        - Uses right click for navigation
+        - Uses both click for confirmation
+    """
+    if firmware.device.startswith(("stax", "flex")):
+        go_right_instruction = NavInsID.SWIPE_CENTER_TO_LEFT
+        confirm_instructions = [nav_ins_confirm_instruction]
+    else:
+        go_right_instruction = NavInsID.RIGHT_CLICK
+        confirm_instructions = [NavInsID.BOTH_CLICK]
+
+    navigator.navigate_until_text_and_compare(
+        go_right_instruction,
+        confirm_instructions,
+        text,
+        screenshot_path,
+        test_name,
+        300,
+        screen_change_before_first_instruction,
+        screen_change_after_last_instruction,
+    )
