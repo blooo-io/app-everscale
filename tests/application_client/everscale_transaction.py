@@ -10,7 +10,7 @@
 #     FLAG_WITH_CHAIN_ID = 0x08
 
 #     def __init__(self,
-#                  decimals: int, 
+#                  decimals: int,
 #                  ticker: str,
 #                  message: bytes,
 #                  current_wallet_type: WalletType,
@@ -19,14 +19,14 @@
 #                  chain_id: bytes | None = None) -> None:
 #         """
 #         Construct a Transaction.
-        
+
 #         The metadata byte is deduced as follows:
 #           - FLAG_WITH_WALLET_ID is set if a current_wallet_type is provided and
 #             it differs from the origin_wallet_type.
 #           - FLAG_WITH_WORKCHAIN_ID is set if workchain_id is provided.
 #           - FLAG_WITH_ADDRESS is set if prepend_address is provided.
 #           - FLAG_WITH_CHAIN_ID is set if chain_id is provided.
-        
+
 #         If current_wallet_type is None or equals origin_wallet_type, then that field is omitted
 #         and on deserialization the origin_wallet_type will be used.
 #         """
@@ -69,8 +69,8 @@
 #     def serialize(self) -> bytes:
 #         """
 #         Serialize the transaction into a byte-buffer with the following structure:
-        
-#         [decimals:1] [ticker_length:1] [ticker:N] [metadata:1] 
+
+#         [decimals:1] [ticker_length:1] [ticker:N] [metadata:1]
 #         [optional fields (if flagged)...] [message:remaining bytes]
 #         """
 #         result = bytearray()
@@ -109,7 +109,7 @@
 #     def from_bytes(cls, data: bytes) -> "Transaction":
 #         """
 #         Deserialize a byte-buffer into a Transaction object.
-        
+
 #         The parsing order in the buffer is:
 #           decimals (1 byte) ->
 #           ticker_length (1 byte) ->
@@ -117,7 +117,7 @@
 #           metadata (1 byte) ->
 #           [optional fields... based on metadata] ->
 #           message (remaining bytes)
-          
+
 #         If the metadata does NOT include FLAG_WITH_WALLET_ID, then current_wallet_type
 #         defaults to origin_wallet_type.
 #         """
