@@ -145,12 +145,12 @@ class EverscaleCommandSender:
 
 
     @contextmanager
-    def sign_message(self, account_number: int, wallet_type: WalletType, message: bytes) -> Generator[None, None, None]:
+    def sign_message(self,  payload: bytes) -> Generator[None, None, None]:
         with self.backend.exchange_async(cla=CLA,
                                          ins=InsType.SIGN_MESSAGE,
                                          p1=P1.P1_CONFIRM,
                                          p2=P2.P2_LAST,
-                                         data=account_number.to_bytes(4, "big") + wallet_type.to_bytes(1, "big") + message) as response:
+                                         data=payload) as response:
             yield response
 
     @contextmanager
