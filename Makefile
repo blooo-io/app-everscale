@@ -42,7 +42,7 @@ APPVERSION_P = 9
 APPVERSION   = "$(APPVERSION_M).$(APPVERSION_N).$(APPVERSION_P)"
 
 ###########################
-# Set Chain environement #
+# Set Chain environment #
 ###########################
 
 ifeq ($(CHAIN),)
