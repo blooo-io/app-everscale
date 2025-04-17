@@ -37,21 +37,8 @@ static uint8_t variant_id = EVERSCALE_VARIANT;
 #endif
 
 void ui_main_menu(void) {
-    // Define the icon based on the variant id
-    // Icon
-    struct nbgl_icon_details_s icon;
-    if (variant_id == VENOM_VARIANT) {
-#if defined(C_app_venom_40px)
-        icon = C_app_venom_40px;
-#endif
-    } else if (variant_id == EVERSCALE_VARIANT) {
-#if defined(C_app_everscale_40px)
-        icon = C_app_everscale_40px;
-#endif
-    }
-
     nbgl_useCaseHomeAndSettings(APPNAME,
-                                &icon,
+                                &C_app_venom_40px,
                                 NULL,
                                 INIT_HOME_PAGE,
                                 NULL,
