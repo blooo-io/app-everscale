@@ -29,16 +29,16 @@ void app_quit(void) {
 
 // Define the icon based on the variant id
 #if defined(VARIANT_ID) && VARIANT_ID == VENOM_VARIANT
-static uint8_t variant_id = VENOM_VARIANT;
+struct nbgl_icon_details_s icon = C_app_venom_64px;
 #elif defined(VARIANT_ID) && VARIANT_ID == EVERSCALE_VARIANT
-static uint8_t variant_id = EVERSCALE_VARIANT;
+struct nbgl_icon_details_s icon = C_app_everscale_64px;
 #else
 #error "Unsupported VARIANT_ID value"
 #endif
 
 void ui_main_menu(void) {
     nbgl_useCaseHomeAndSettings(APPNAME,
-                                &C_app_venom_40px,
+                                &icon,
                                 NULL,
                                 INIT_HOME_PAGE,
                                 NULL,
