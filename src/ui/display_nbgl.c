@@ -65,12 +65,12 @@ void ui_display_address() {
     // Icon
     struct nbgl_icon_details_s icon;
     if (variant_id == VENOM_VARIANT) {
-#if defined(C_app_venom_40px)
-        icon = C_app_venom_40px;
+#if defined(C_app_venom_64px)
+        icon = C_app_venom_64px;
 #endif
     } else if (variant_id == EVERSCALE_VARIANT) {
-#if defined(C_app_everscale_40px)
-        icon = C_app_everscale_40px;
+#if defined(C_app_everscale_64px)
+        icon = C_app_everscale_64px;
 #endif
     }
     nbgl_useCaseAddressReview(data_context.addr_context.address_str,
@@ -100,12 +100,12 @@ void ui_display_public_key() {
     // Icon
     struct nbgl_icon_details_s icon;
     if (variant_id == VENOM_VARIANT) {
-#if defined(C_app_venom_40px)
-        icon = C_app_venom_40px;
+#if defined(C_app_venom_64px)
+        icon = C_app_venom_64px;
 #endif
     } else if (variant_id == EVERSCALE_VARIANT) {
-#if defined(C_app_everscale_40px)
-        icon = C_app_everscale_40px;
+#if defined(C_app_everscale_64px)
+        icon = C_app_everscale_64px;
 #endif
     }
 
@@ -121,7 +121,7 @@ void ui_display_public_key() {
 
     // nbgl_useCaseAddressReview(data_context.pk_context.public_key_str,
     //                           NULL,
-    //                           &C_app_everscale_40px,
+    //                           &C_app_everscale_64px,
     //                           "Verify Public Key",
     //                           NULL,
     //                           review_choice_pubkey);
@@ -182,12 +182,12 @@ void ui_display_sign_transaction(int flow) {
     // Icon
     struct nbgl_icon_details_s icon;
     if (variant_id == VENOM_VARIANT) {
-#if defined(C_app_venom_40px)
-        icon = C_app_venom_40px;
+#if defined(C_app_venom_64px)
+        icon = C_app_venom_64px;
 #endif
     } else if (variant_id == EVERSCALE_VARIANT) {
-#if defined(C_app_everscale_40px)
-        icon = C_app_everscale_40px;
+#if defined(C_app_everscale_64px)
+        icon = C_app_everscale_64px;
 #endif
     }
 
@@ -217,12 +217,12 @@ void ui_display_sign() {
     // Icon
     struct nbgl_icon_details_s icon;
     if (variant_id == VENOM_VARIANT) {
-#if defined(C_app_venom_40px)
-        icon = C_app_venom_40px;
+#if defined(C_app_venom_64px)
+        icon = C_app_venom_64px;
 #endif
     } else if (variant_id == EVERSCALE_VARIANT) {
-#if defined(C_app_everscale_40px)
-        icon = C_app_everscale_40px;
+#if defined(C_app_everscale_64px)
+        icon = C_app_everscale_64px;
 #endif
     }
 
