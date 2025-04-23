@@ -25,10 +25,10 @@ include $(BOLOS_SDK)/Makefile.defines
 #        Mandatory configuration       #
 ########################################
 # Application name
-ifeq ($(COIN),VENOM)
-APPNAME = "Venom"
-else
+ifeq ($(COIN),EVER)
 APPNAME = "Everscale"
+else
+APPNAME = "Venom"
 endif
 
 APP_LOAD_FLAGS=--appFlags 0x200
@@ -44,16 +44,16 @@ APP_SOURCE_PATH += src
 
 # Application icons following guidelines:
 # https://developers.ledger.com/docs/embedded-app/design-requirements/#device-icon
-ifeq ($(COIN),VENOM)
-ICON_NANOX = icons/app_venom_14px.gif
-ICON_NANOSP = icons/app_venom_14px.gif
-ICON_STAX = icons/app_venom_32px.gif
-ICON_FLEX = icons/app_venom_40px.gif
-else
+ifeq ($(COIN),EVER)
 ICON_NANOX = icons/app_everscale_14px.gif
 ICON_NANOSP = icons/app_everscale_14px.gif
 ICON_STAX = icons/app_everscale_32px.gif
 ICON_FLEX = icons/app_everscale_40px.gif
+else
+ICON_NANOX = icons/app_venom_14px.gif
+ICON_NANOSP = icons/app_venom_14px.gif
+ICON_STAX = icons/app_venom_32px.gif
+ICON_FLEX = icons/app_venom_40px.gif
 endif
 
 # Application allowed derivation curves.
